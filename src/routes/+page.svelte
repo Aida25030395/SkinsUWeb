@@ -1,3 +1,99 @@
+<script lang="ts">
+	// =====================================================
+	// DATOS DE LA PÁGINA
+	// =====================================================
+
+	const beneficios = [
+		{
+			icono: '💡',
+			titulo: 'Comparte conocimiento',
+			texto: 'Ofrece asesorías y comparte lo que sabes con otros estudiantes.',
+			detalle:
+				'En SkinsU puedes compartir los conocimientos que dominas y apoyar a otros estudiantes mediante asesorías entre compañeros.'
+		},
+		{
+			icono: '📚',
+			titulo: 'Encuentra apoyo',
+			texto: 'Encuentra compañeros que pueden ayudarte con diferentes materias.',
+			detalle:
+				'Si necesitas apoyo en alguna materia, SkinsU busca facilitar que encuentres estudiantes que tengan conocimientos sobre ese tema.'
+		},
+		{
+			icono: '🎮',
+			titulo: 'Gana XP',
+			texto: 'Participa, ayuda y acumula puntos de experiencia dentro de SkinsU.',
+			detalle:
+				'La propuesta incluye un sistema de experiencia. Al participar y ayudar a otros estudiantes puedes acumular XP y avanzar dentro de la plataforma.'
+		},
+		{
+			icono: '🏆',
+			titulo: 'Sube de nivel',
+			texto: 'Obtén niveles, insignias y reconocimientos por tu participación.',
+			detalle:
+				'El sistema de progreso busca reconocer la participación de los estudiantes mediante niveles, insignias y posibles recompensas.'
+		}
+	];
+
+	const pasos = [
+		{
+			numero: '01',
+			titulo: 'Crea tu perfil',
+			texto:
+				'Indica qué conocimientos puedes compartir y en qué temas necesitas apoyo.',
+			detalle:
+				'El estudiante podrá crear un perfil donde indique los conocimientos que puede compartir y también los temas en los que necesita apoyo académico.'
+		},
+		{
+			numero: '02',
+			titulo: 'Conecta',
+			texto:
+				'Encuentra estudiantes que puedan ayudarte o compañeros a quienes puedas ayudar.',
+			detalle:
+				'SkinsU busca facilitar el encuentro entre estudiantes que necesitan apoyo y compañeros que tienen conocimientos que pueden compartir.'
+		},
+		{
+			numero: '03',
+			titulo: 'Comparte',
+			texto:
+				'Participa en asesorías y forma parte de una comunidad de aprendizaje.',
+			detalle:
+				'Después de conectar con otros estudiantes, puedes participar en asesorías y contribuir a una comunidad basada en el aprendizaje colaborativo.'
+		}
+	];
+
+	// =====================================================
+	// ESTADO DEL MODAL
+	// =====================================================
+
+	let modalAbierto = $state(false);
+
+	let informacionModal = $state({
+		titulo: '',
+		texto: ''
+	});
+
+	// =====================================================
+	// ABRIR MODAL
+	// =====================================================
+
+	function abrirModal(titulo: string, texto: string) {
+		informacionModal = {
+			titulo,
+			texto
+		};
+
+		modalAbierto = true;
+	}
+
+	// =====================================================
+	// CERRAR MODAL
+	// =====================================================
+
+	function cerrarModal() {
+		modalAbierto = false;
+	}
+</script>
+
 <svelte:head>
 	<title>SkinsU | Donde aprender y compartir es fácil</title>
 
@@ -6,51 +102,6 @@
 		content="SkinsU conecta estudiantes para compartir conocimientos, recibir asesorías y aprender juntos."
 	/>
 </svelte:head>
-
-<script lang="ts">
-	// Beneficios principales de SkinsU
-	const beneficios = [
-		{
-			icono: '💡',
-			titulo: 'Comparte conocimiento',
-			texto: 'Ofrece asesorías y comparte lo que sabes con otros estudiantes.'
-		},
-		{
-			icono: '📚',
-			titulo: 'Encuentra apoyo',
-			texto: 'Encuentra compañeros que pueden ayudarte con diferentes materias.'
-		},
-		{
-			icono: '🎮',
-			titulo: 'Gana XP',
-			texto: 'Participa, ayuda y acumula puntos de experiencia dentro de SkinsU.'
-		},
-		{
-			icono: '🏆',
-			titulo: 'Sube de nivel',
-			texto: 'Obtén niveles, insignias y reconocimientos por tu participación.'
-		}
-	];
-
-	// Pasos principales para utilizar SkinsU
-	const pasos = [
-		{
-			numero: '01',
-			titulo: 'Crea tu perfil',
-			texto: 'Indica qué conocimientos puedes compartir y en qué temas necesitas apoyo.'
-		},
-		{
-			numero: '02',
-			titulo: 'Conecta',
-			texto: 'Encuentra estudiantes que puedan ayudarte o compañeros a quienes puedas ayudar.'
-		},
-		{
-			numero: '03',
-			titulo: 'Comparte',
-			texto: 'Participa en asesorías y forma parte de una comunidad de aprendizaje.'
-		}
-	];
-</script>
 
 <div class="pagina">
 
@@ -320,7 +371,11 @@
 
 			{#each pasos as paso}
 
-				<div class="paso">
+				<button
+					type="button"
+					class="paso interactivo"
+					onclick={() => abrirModal(paso.titulo, paso.detalle)}
+				>
 
 					<span class="numero-paso">
 						{paso.numero}
@@ -336,7 +391,11 @@
 						{paso.texto}
 					</p>
 
-				</div>
+					<span class="ver-mas">
+						Ver más →
+					</span>
+
+				</button>
 
 			{/each}
 
@@ -377,7 +436,11 @@
 
 			{#each beneficios as beneficio}
 
-				<div class="beneficio">
+				<button
+					type="button"
+					class="beneficio interactivo"
+					onclick={() => abrirModal(beneficio.titulo, beneficio.detalle)}
+				>
 
 					<div class="icono-beneficio">
 						{beneficio.icono}
@@ -391,7 +454,11 @@
 						{beneficio.texto}
 					</p>
 
-				</div>
+					<span class="ver-mas">
+						Ver más →
+					</span>
+
+				</button>
 
 			{/each}
 
@@ -597,6 +664,58 @@
 
 	</footer>
 
+
+	<!-- =====================================================
+	     MODAL DINÁMICO
+	     ===================================================== -->
+
+	{#if modalAbierto}
+
+		<div class="modal-fondo">
+
+			<div
+				class="modal-contenido"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="titulo-modal"
+				tabindex="-1"
+			>
+
+				<button
+					type="button"
+					class="boton-cerrar"
+					aria-label="Cerrar ventana"
+					onclick={cerrarModal}
+				>
+					×
+				</button>
+
+				<span class="mini-titulo">
+					CONOCE MÁS
+				</span>
+
+				<h2 id="titulo-modal">
+					{informacionModal.titulo}
+				</h2>
+
+				<p>
+					{informacionModal.texto}
+				</p>
+
+				<button
+					type="button"
+					class="boton-modal"
+					onclick={cerrarModal}
+				>
+					Entendido
+				</button>
+
+			</div>
+
+		</div>
+
+	{/if}
+
 </div>
 
 
@@ -680,8 +799,6 @@
 	}
 
 
-	/* Logo */
-
 	.logo {
 
 		display: flex;
@@ -699,8 +816,6 @@
 		display: block;
 	}
 
-
-	/* Menú */
 
 	.barra-navegacion nav {
 
@@ -725,8 +840,6 @@
 		color: white;
 	}
 
-
-	/* Botón de navegación */
 
 	.boton-navegacion {
 
@@ -786,8 +899,6 @@
 	}
 
 
-	/* Etiqueta superior */
-
 	.etiqueta {
 
 		display: inline-flex;
@@ -815,8 +926,6 @@
 		letter-spacing: 2px;
 	}
 
-
-	/* Título */
 
 	.principal h1 {
 
@@ -859,7 +968,9 @@
 	}
 
 
-	/* Botones */
+	/* ---------------------------------------------------------
+	   BOTONES PRINCIPALES
+	   --------------------------------------------------------- */
 
 	.botones-principales {
 
@@ -903,7 +1014,9 @@
 	}
 
 
-	/* Estadísticas */
+	/* ---------------------------------------------------------
+	   ESTADÍSTICAS
+	   --------------------------------------------------------- */
 
 	.estadisticas-principales {
 
@@ -1045,8 +1158,6 @@
 	}
 
 
-	/* Experiencia */
-
 	.experiencia {
 
 		margin-top: 30px;
@@ -1098,8 +1209,6 @@
 	}
 
 
-	/* Habilidades */
-
 	.habilidades {
 
 		display: flex;
@@ -1125,8 +1234,6 @@
 		font-size: 0.7rem;
 	}
 
-
-	/* Insignia */
 
 	.insignia {
 
@@ -1174,8 +1281,6 @@
 		font-size: 0.7rem;
 	}
 
-
-	/* Elementos flotantes */
 
 	.elemento-flotante {
 
@@ -1449,6 +1554,66 @@
 
 
 	/* ---------------------------------------------------------
+	   BOTONES INTERACTIVOS
+	   --------------------------------------------------------- */
+
+	.interactivo {
+
+		appearance: none;
+
+		-webkit-appearance: none;
+
+		font-family: inherit;
+
+		text-align: left;
+
+		cursor: pointer;
+
+		color: inherit;
+
+		width: 100%;
+
+		transition:
+			transform 0.25s ease,
+			border-color 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+
+
+	.interactivo:hover {
+
+		transform: translateY(-7px);
+
+		border-color: rgba(0, 212, 255, 0.45);
+
+		box-shadow:
+			0 15px 35px rgba(0, 0, 0, 0.25);
+	}
+
+
+	.interactivo:focus-visible {
+
+		outline: 2px solid #00d4ff;
+
+		outline-offset: 4px;
+	}
+
+
+	.ver-mas {
+
+		display: block;
+
+		margin-top: 20px;
+
+		color: #00d4ff;
+
+		font-size: 0.78rem;
+
+		font-weight: 800;
+	}
+
+
+	/* ---------------------------------------------------------
 	   BENEFICIOS
 	   --------------------------------------------------------- */
 
@@ -1481,14 +1646,6 @@
 		background: #101f34;
 
 		border: 1px solid rgba(255, 255, 255, 0.07);
-
-		transition: transform 0.2s;
-	}
-
-
-	.beneficio:hover {
-
-		transform: translateY(-5px);
 	}
 
 
@@ -1576,8 +1733,6 @@
 	}
 
 
-	/* Progreso */
-
 	.progreso-skinsu {
 
 		display: flex;
@@ -1651,8 +1806,6 @@
 		font-size: 1.4rem;
 	}
 
-
-	/* Recompensa académica */
 
 	.nota-recompensa {
 
@@ -1787,8 +1940,6 @@
 	}
 
 
-	/* Instagram */
-
 	.instagram {
 
 		color: #00d4ff;
@@ -1814,7 +1965,181 @@
 
 
 	/* ---------------------------------------------------------
-	   DISEÑO RESPONSIVO PARA TABLETS
+	   MODAL
+	   --------------------------------------------------------- */
+
+	.modal-fondo {
+
+		position: fixed;
+
+		inset: 0;
+
+		z-index: 1000;
+
+		display: flex;
+
+		align-items: center;
+
+		justify-content: center;
+
+		padding: 20px;
+
+		background: rgba(0, 0, 0, 0.72);
+
+		backdrop-filter: blur(8px);
+
+		animation: aparecerFondo 0.2s ease;
+	}
+
+
+	.modal-contenido {
+
+		position: relative;
+
+		width: min(100%, 520px);
+
+		padding: 40px;
+
+		border: 1px solid rgba(0, 212, 255, 0.25);
+
+		border-radius: 24px;
+
+		background:
+			linear-gradient(
+				145deg,
+				#142238,
+				#0b1728
+			);
+
+		box-shadow:
+			0 30px 80px rgba(0, 0, 0, 0.5);
+
+		animation: aparecerModal 0.25s ease;
+	}
+
+
+	.modal-contenido h2 {
+
+		margin: 12px 0 18px;
+
+		font-size: 2rem;
+
+		line-height: 1.1;
+	}
+
+
+	.modal-contenido p {
+
+		color: #aeb8c8;
+
+		font-size: 1rem;
+
+		line-height: 1.8;
+	}
+
+
+	.boton-cerrar {
+
+		position: absolute;
+
+		top: 15px;
+
+		right: 15px;
+
+		width: 38px;
+
+		height: 38px;
+
+		border: 1px solid rgba(255, 255, 255, 0.1);
+
+		border-radius: 50%;
+
+		background: #101f34;
+
+		color: white;
+
+		font-size: 1.4rem;
+
+		cursor: pointer;
+
+		transition: 0.2s ease;
+	}
+
+
+	.boton-cerrar:hover {
+
+		background: #6d5dfc;
+
+		transform: rotate(90deg);
+	}
+
+
+	.boton-modal {
+
+		margin-top: 28px;
+
+		padding: 13px 22px;
+
+		border: none;
+
+		border-radius: 10px;
+
+		background:
+			linear-gradient(
+				90deg,
+				#6d5dfc,
+				#00aeea
+			);
+
+		color: white;
+
+		font-weight: 800;
+
+		cursor: pointer;
+
+		transition: 0.2s ease;
+	}
+
+
+	.boton-modal:hover {
+
+		transform: translateY(-2px);
+
+		box-shadow:
+			0 8px 25px rgba(0, 174, 234, 0.25);
+	}
+
+
+	@keyframes aparecerFondo {
+
+		from {
+			opacity: 0;
+		}
+
+		to {
+			opacity: 1;
+		}
+	}
+
+
+	@keyframes aparecerModal {
+
+		from {
+			opacity: 0;
+
+			transform: translateY(20px) scale(0.96);
+		}
+
+		to {
+			opacity: 1;
+
+			transform: translateY(0) scale(1);
+		}
+	}
+
+
+	/* ---------------------------------------------------------
+	   TABLETS
 	   --------------------------------------------------------- */
 
 	@media (max-width: 900px) {
@@ -1860,7 +2185,7 @@
 
 
 	/* ---------------------------------------------------------
-	   DISEÑO RESPONSIVO PARA CELULARES
+	   CELULARES
 	   --------------------------------------------------------- */
 
 	@media (max-width: 600px) {
@@ -1955,6 +2280,18 @@
 		footer .logo img {
 
 			width: 125px;
+		}
+
+
+		.modal-contenido {
+
+			padding: 32px 24px;
+		}
+
+
+		.modal-contenido h2 {
+
+			font-size: 1.7rem;
 		}
 
 	}
